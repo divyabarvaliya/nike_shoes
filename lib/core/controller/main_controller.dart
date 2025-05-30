@@ -6,6 +6,7 @@ import '../constants/constants.dart';
 
 class MainController extends GetxController {
   static MainController get to => Get.find();
+  RxList<num> sizes = [9, 9.5, 10, 11].obs;
   RxList<ShoesModel> cart = <ShoesModel>[].obs;
 
   List<ShoesModel> shoes = <ShoesModel>[
@@ -28,4 +29,6 @@ class MainController extends GetxController {
     CategoryModel(name: 'Tennis', items: 13),
   ];
   RxInt selCate = 0.obs;
+  RxInt selSize = 0.obs;
+  RxInt selColor = 0.obs;
 }

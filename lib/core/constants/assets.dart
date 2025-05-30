@@ -14,6 +14,7 @@ class ImagesAsset {
   static const String s_8 = '$images/s_8.png';
   static const String offerShoes = '$images/offer_shoes.png';
   static const String justDoIt = '$images/just_do_it.png';
+  static const String bottomBar = '$images/bottom_bar.png';
 }
 
 class IconsAsset {
@@ -27,4 +28,5 @@ class IconsAsset {
   static const String delete = '$icons/delete.png';
   static const String star = '$icons/star.png';
   static const String save = '$icons/save.png';
+  static const String down = '$icons/down.png';
 }

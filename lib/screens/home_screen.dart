@@ -57,244 +57,255 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
+        children: [_shoesView(), _collectionView(), _offerShoes(), _bottom()],
+      ),
+    );
+  }
+
+  //s c o b
+  Widget _offerShoes() {
+    return Obx(
+      () => AnimatedPositioned(
+        duration: Duration(milliseconds: 700),
+        left: shoesPos.value,
+        top: Dimens.horizontalBlockSize * 46,
+        child: Transform.rotate(
+          angle: -0.4,
+          child: Image.asset(
+            ImagesAsset.offerShoes,
+            height: Dimens.verticalBlockSize * 25.5,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _bottom() {
+    return AnimatedPositioned(
+      bottom: isScrollingDown ? -Dimens.verticalBlockSize * 20 : 0,
+      left: 0,
+      right: 0,
+      duration: Duration(milliseconds: 700),
+      child: Image.asset(ImagesAsset.bottomBar),
+    );
+  }
+
+  Widget _shoesView() {
+    return Column(
+      children: [
+        AnimatedContainer(
+          duration: Duration(milliseconds: 700),
+          height:
+              isScrollingDown
+                  ? Dimens.verticalBlockSize * 35
+                  : Dimens.verticalBlockSize * 40,
+        ),
+        Expanded(
+          child: GridView.builder(
+            controller: _scrollViewController,
+            shrinkWrap: true,
+            itemCount: MainController.to.shoes.length,
+            padding: EdgeInsets.only(
+              left: Dimens.s_20(),
+              right: Dimens.s_20(),
+              top: Dimens.verticalBlockSize * 12,
+              bottom: Dimens.verticalBlockSize * 12,
+            ),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // Number of columns
+              crossAxisSpacing: Dimens.s_20(), // Space between columns
+              mainAxisSpacing: 18, // Space between rows
+              childAspectRatio: 1 / 1.3, // Width to height ratio
+            ),
+            itemBuilder: (context, i) {
+              ShoesModel shoes = MainController.to.shoes[i];
+              return GestureDetector(
+                onTap: () {
+                  Get.to(() => DescriptionScreen(shoes: shoes));
+                },
+                child: Hero(
+                  tag: shoes.img,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: Dimens.verticalBlockSize * 2,
+                      horizontal: Dimens.s_18(),
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xffEFEFEF)),
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    child: EntryListItem(
+                      index: i,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset(IconsAsset.star, scale: 3.5),
+                              SizedBox(width: Dimens.s_4()),
+                              Text(
+                                '4.8',
+                                style: AppTextStyle.bodyRegular[12]?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.greyScale[20],
+                                ),
+                              ),
+                              Spacer(),
+                              Image.asset(IconsAsset.save, scale: 3.5),
+                            ],
+                          ),
+                          Image.asset(
+                            shoes.img,
+                            height: Dimens.verticalBlockSize * 10,
+                            width: double.infinity,
+                            fit: BoxFit.contain,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                shoes.title,
+                                maxLines: 2,
+                                overflow: TextOverflow.clip,
+                                style: AppTextStyle.bodyRegular[12]?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.greyScale[20],
+                                ),
+                              ),
+                              Text(
+                                StringFormat.priceFormat(shoes.price),
+                                style: AppTextStyle.bodyRegular[18]?.copyWith(
+                                  height: 1.5,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  _collectionView() {
+    return Container(
+      color: Colors.white,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            children: [
-              AnimatedContainer(
-                duration: Duration(milliseconds: 700),
-                height:
-                    isScrollingDown
-                        ? Dimens.verticalBlockSize * 35
-                        : Dimens.verticalBlockSize * 40,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: Dimens.s_25()),
+            child: SafeArea(
+              child: EntryListItem(
+                index: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(IconsAsset.category, scale: 3.5),
+                    Image.asset(IconsAsset.logo, scale: 7),
+                    Image.asset(IconsAsset.bag, scale: 3.5),
+                  ],
+                ),
               ),
-              Expanded(
-                child: GridView.builder(
-                  controller: _scrollViewController,
-                  shrinkWrap: true,
-                  itemCount: MainController.to.shoes.length,
-                  padding: EdgeInsets.only(
-                    left: Dimens.s_20(),
-                    right: Dimens.s_20(),
-                    top: Dimens.verticalBlockSize * 12,
-                    bottom: Dimens.verticalBlockSize * 12,
-                  ),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Number of columns
-                    crossAxisSpacing: Dimens.s_20(), // Space between columns
-                    mainAxisSpacing: 18, // Space between rows
-                    childAspectRatio: 1 / 1.3, // Width to height ratio
-                  ),
-                  itemBuilder: (context, i) {
-                    ShoesModel shoes = MainController.to.shoes[i];
-                    return GestureDetector(
-                      onTap: () {
-                        Get.to(() => DescriptionScreen(shoes: shoes));
-                      },
-                      child: Hero(
-                        tag: shoes.img,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: Dimens.verticalBlockSize * 2,
-                            horizontal: Dimens.s_18(),
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xffEFEFEF)),
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          child: EntryListItem(
-                            index: i,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Image.asset(IconsAsset.star, scale: 3.5),
-                                    SizedBox(width: Dimens.s_4()),
-                                    Text(
-                                      '4.8',
-                                      style: AppTextStyle.bodyRegular[12]
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.greyScale[20],
-                                          ),
-                                    ),
-                                    Spacer(),
-                                    Image.asset(IconsAsset.save, scale: 3.5),
-                                  ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: Dimens.s_25()),
+            child: EntryListItem(
+              index: 0,
+              child: Text(
+                'New Collection',
+                style: AppTextStyle.bodyRegular[20]?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  height: 1.3,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: Dimens.s_25()),
+            child: EntryListItem(
+              index: 0,
+              child: Text(
+                'Explore the new collection of sneakers',
+                style: AppTextStyle.bodyRegular[12]?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  fontFamily: FontFamily.poppins,
+                  color: AppColors.greyScale[20],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: Dimens.verticalBlockSize * 3,
+              left: Dimens.s_25(),
+              right: Dimens.s_25(),
+            ),
+            child: Image.asset(ImagesAsset.offerCard),
+          ),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 700),
+            height: isScrollingDown ? 0 : Dimens.verticalBlockSize * 12,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: Dimens.s_25(),
+                right: Dimens.s_25(),
+                top: Dimens.verticalBlockSize * 2,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(MainController.to.category.length, (i) {
+                  CategoryModel cat = MainController.to.category[i];
+                  return InkWell(
+                    onTap: () {
+                      MainController.to.selCate.value = i;
+                    },
+                    child: EntryListItem(
+                      index: i,
+                      child: Obx(
+                        () => SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                cat.name,
+                                style: AppTextStyle.bodyRegular[20]?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color:
+                                      MainController.to.selCate.value == i
+                                          ? Colors.black
+                                          : AppColors.greyScale[20],
                                 ),
-                                Image.asset(
-                                  shoes.img,
-                                  height: Dimens.verticalBlockSize * 10,
-                                  width: double.infinity,
-                                  fit: BoxFit.contain,
+                              ),
+                              Text(
+                                '${cat.items} items',
+                                style: AppTextStyle.bodyRegular[12]?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: FontFamily.poppins,
+                                  color:
+                                      MainController.to.selCate.value == i
+                                          ? Colors.black
+                                          : AppColors.greyScale[20],
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      shoes.title,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.clip,
-                                      style: AppTextStyle.bodyRegular[12]
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.greyScale[20],
-                                          ),
-                                    ),
-                                    Text(
-                                      StringFormat.priceFormat(shoes.price),
-                                      style: AppTextStyle.bodyRegular[18]
-                                          ?.copyWith(
-                                            height: 1.5,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-          Container(
-            color: Colors.white,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Dimens.s_25()),
-                  child: SafeArea(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Image.asset(IconsAsset.category, scale: 3.5),
-                        Image.asset(IconsAsset.logo, scale: 7),
-                        Image.asset(IconsAsset.bag, scale: 3.5),
-                      ],
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Dimens.s_25()),
-                  child: Text(
-                    'New Collection',
-                    style: AppTextStyle.bodyRegular[20]?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      height: 1.3,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Dimens.s_25()),
-                  child: Text(
-                    'Explore the new collection of sneakers',
-                    style: AppTextStyle.bodyRegular[12]?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      fontFamily: FontFamily.poppins,
-                      color: AppColors.greyScale[20],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: Dimens.verticalBlockSize * 3,
-                    left: Dimens.s_25(),
-                    right: Dimens.s_25(),
-                  ),
-                  child: Image.asset(ImagesAsset.offerCard),
-                ),
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 700),
-                  height: isScrollingDown ? 0 : Dimens.verticalBlockSize * 12,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: Dimens.s_25(),
-                      right: Dimens.s_25(),
-                      top: Dimens.verticalBlockSize * 2,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(
-                        MainController.to.category.length,
-                        (i) {
-                          CategoryModel cat = MainController.to.category[i];
-                          return GestureDetector(
-                            onTap: () {
-                              MainController.to.selCate.value = i;
-                            },
-                            child: EntryListItem(
-                              index: i,
-                              child: Obx(
-                                () => SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        cat.name,
-                                        style: AppTextStyle.bodyRegular[20]
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              color:
-                                                  MainController
-                                                              .to
-                                                              .selCate
-                                                              .value ==
-                                                          i
-                                                      ? Colors.black
-                                                      : AppColors.greyScale[20],
-                                            ),
-                                      ),
-                                      Text(
-                                        '${cat.items} items',
-                                        style: AppTextStyle.bodyRegular[12]
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: FontFamily.poppins,
-                                              color:
-                                                  MainController
-                                                              .to
-                                                              .selCate
-                                                              .value ==
-                                                          i
-                                                      ? Colors.black
-                                                      : AppColors.greyScale[20],
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Obx(
-            () => AnimatedPositioned(
-              duration: Duration(milliseconds: 700),
-              left: shoesPos.value,
-              top: Dimens.horizontalBlockSize * 46,
-              child: Transform.rotate(
-                angle: -0.4,
-                child: Image.asset(
-                  ImagesAsset.offerShoes,
-                  height: Dimens.verticalBlockSize * 25.5,
-                ),
+                  );
+                }),
               ),
             ),
           ),

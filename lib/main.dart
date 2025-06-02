@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       initialBinding: AppBidding(),
       debugShowCheckedModeBanner: false,
-      title: 'MenFits Shop',
+      title: 'Shoes Shop',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
       ),
